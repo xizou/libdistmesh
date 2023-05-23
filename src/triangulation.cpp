@@ -23,7 +23,7 @@
 // qhull library used to calculate delaunay triangulation
 extern "C" {
     #define qh_QHimport
-    #include <qhull/qhull_a.h>
+    #include <libqhull/qhull_a.h>
 }
 
 #include "distmesh/distmesh.h"
@@ -32,9 +32,9 @@ extern "C" {
 Eigen::ArrayXXi distmesh::triangulation::delaunay(
     Eigen::Ref<Eigen::ArrayXXd const> const points) {
     // reset qhull
-    if (qh_qh) {
+    #if qh_QHpointer
         qh_save_qhull();
-    }
+    #endif
 
     // convert points array to row major format
     Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic,

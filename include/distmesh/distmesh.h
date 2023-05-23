@@ -26,7 +26,7 @@
 #include <tuple>
 
 // Eigen lib for array handling
-#include <Eigen/Core>
+#include <eigen3/Eigen/Core>
 
 // libdistmesh includes
 #include "functional.h"
