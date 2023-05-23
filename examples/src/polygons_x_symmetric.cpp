@@ -108,6 +108,48 @@ int main() {
     points = newPoints.topRows(newNodeCount + nNodeOffset);
     elements = newElements;
 
+    // build a matrix to count edge occurences
+    Eigen::ArrayXXi edgeMat = Eigen::ArrayXXi::Zero(points.rows(), points.rows());
+    const Eigen::Vector3i endIndex(1, 2, 0);
+    for (int i = 0; i < elements.rows(); i++) {
+        for (int j = 0; j < 3; j++) {
+
+            int p1 = elements(i, j);
+            int p2 = elements(i, endIndex(j));
+
+            if (p1 > p2) {
+                p1 = p2;
+                p2 = elements(i, j);
+            }
+
+            edgeMat(p1, p2)++;
+        }
+    }
+
+    // build edge lists
+    Eigen::ArrayXXi edgeListBoundary(3 * elements.rows(), 2);
+    Eigen::ArrayXXi edgeListInterior(3 * elements.rows(), 2);
+    int edgeCountBoundary = 0;
+    int edgeCountInterior = 0;
+
+    for (int i = 0; i < points.rows(); i++) {
+        for (int j = i+1; j < points.rows(); j++) {
+            if (edgeMat(i, j) == 1) {
+                // edges occurring once must be boundary edges
+                edgeListBoundary.row(edgeCountBoundary) << i, j;
+                edgeCountBoundary++;
+            } else if (edgeMat(i, j) == 2) {
+                // edges occurring twice must be interior edges
+                edgeListInterior.row(edgeCountInterior) << i, j;
+                edgeCountInterior++;
+            }
+        }
+    }
+
+    // collect the edges to output
+    Eigen::ArrayXXi edgeBoundary = edgeListBoundary.topRows(edgeCountBoundary);
+    Eigen::ArrayXXi edgeInterior = edgeListInterior.topRows(edgeCountInterior);
+
     // print mesh properties and elapsed time
     std::cout << "Created mesh with " << points.rows() << " points and " << elements.rows() <<
         " elements in " << time.elapsed() * 1e3 << " ms." << std::endl;
@@ -118,6 +160,8 @@ int main() {
     // save mesh to file
     distmesh::helper::savetxt<double>(points, "points.txt");
     distmesh::helper::savetxt<int>(elements, "triangulation.txt");
+    distmesh::helper::savetxt<int>(edgeBoundary, "edgeBoundary.txt");
+    distmesh::helper::savetxt<int>(edgeInterior, "edgeInterior.txt");
 
     // plot mesh using python
     return system("python plot_mesh.py");

@@ -14,11 +14,19 @@
 # You should have received a copy of the GNU General Public License
 # along with libDistMesh. If not, see <http://www.gnu.org/licenses/>.
 #
-# Copyright (C) 2015 Patrik Gebhardt
-# Contact: patrik.gebhardt@rub.de
 # --------------------------------------------------------------------
 
 from pylab import *
+
+
+def plot_edges(filename, points, color='b'):
+    try:
+        edgeList = loadtxt(filename, dtype=int)
+        for i in range(edgeList.shape[0]):
+            plot(points[edgeList[i, :], 0], points[edgeList[i, :], 1], color)
+    except:
+        return
+
 
 def main():
     # load mesh
@@ -28,7 +36,12 @@ def main():
     # plot mesh
     gca().set_aspect('equal')
     triplot(points[:, 0], points[:, 1], triangulation)
+
+    plot_edges('edgeBoundary.txt', points)
+    plot_edges('edgeInterior.txt', points, 'r')
+
     show()
+
 
 if __name__ == '__main__':
     main()
