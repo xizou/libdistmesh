@@ -39,7 +39,7 @@ Eigen::ArrayXXd distmesh::utils::createInitialPoints(
     Functional const& elementSizeFunction, Eigen::Ref<Eigen::ArrayXXd const> const boundingBox,
     Eigen::Ref<Eigen::ArrayXXd const> const fixedPoints) {
     // extract dimension of mesh
-    unsigned const dimension = boundingBox.cols();
+    int const dimension = boundingBox.cols();
 
     // initially distribute points evenly in complete bounding box
     Eigen::ArrayXi pointsPerDimension(dimension);
@@ -215,7 +215,7 @@ Eigen::ArrayXi distmesh::utils::boundEdges(
     for (int edge = 0; edge < boundary.rows(); ++edge) {
         boundary(edge) = boundaryEdges[edge];
     }
-    
+
     return boundary;
 }
 

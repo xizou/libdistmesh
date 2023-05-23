@@ -92,6 +92,20 @@ namespace distmesh {
         // stores std function
         function_t function_;
     };
+
+    Functional operator+(Functional const& lhs, Functional const& rhs);
+    Functional operator+(Functional const& lhs, double const rhs);
+    Functional operator+(double const lhs, Functional const& rhs);
+    Functional operator-(Functional const& lhs, Functional const& rhs);
+    Functional operator-(Functional const& lhs, double const rhs);
+    Functional operator-(double const lhs, Functional const& rhs);
+    Functional operator*(Functional const& lhs, Functional const& rhs);
+    Functional operator*(Functional const& lhs, double const rhs);
+    Functional operator*(double const lhs, Functional const& rhs);
+    Functional operator/(Functional const& lhs, Functional const& rhs);
+    Functional operator/(Functional const& lhs, double const rhs);
+    Functional operator/(double const lhs, Functional const& rhs);
+
 }
 
 #endif
